@@ -7,16 +7,29 @@ export default function Home() {
   const [fnr, setFnr] = useState<string>('');
   const [dokumentasjon, setDokumentasjon] = useState<string>('');
 
+  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+
   /* @ts-ignore */
   const onButtonClick = async (event) => {
+    setError(null);
+    setMessage(null);
     event.preventDefault();
-    await fetch('/api/ettersporrDokumentasjon', {
+    const result = await fetch('/api/ettersporrDokumentasjon', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         fnr,
         type: dokumentasjon,
       }),
     });
+    if (!result.ok) {
+      setError('Kunne ikke etterspørre dokumentasjon');
+      return;
+    }
+    setMessage('Dokumentasjon etterspurt');
   };
 
   return (
@@ -40,6 +53,8 @@ export default function Home() {
             <option value="STUDIER">Studier</option>
             <option value="OMSORG">Omsorg</option>
           </Select>
+          {error && <p>{error}</p>}
+          {message && <p>{message}</p>}
           <Button variant="primary" onClick={onButtonClick}>
             Etterspør dokkumentasjon
           </Button>
