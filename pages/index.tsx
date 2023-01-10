@@ -7,6 +7,7 @@ export default function Home() {
   const [fnr, setFnr] = useState<string>('');
   const [dokumentasjon, setDokumentasjon] = useState<string>('');
 
+  /* @ts-ignore */
   const onButtonClick = async (event) => {
     event.preventDefault();
     await fetch('/api/ettersporrDokumentasjon', {
