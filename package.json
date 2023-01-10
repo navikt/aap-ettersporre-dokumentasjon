@@ -16,6 +16,8 @@
     "@navikt/ds-icons": "^2.0.12",
     "@navikt/ds-react": "^2.0.12",
     "@navikt/ds-react-internal": "^2.0.12",
+    "@navikt/next-api-proxy": "^2.1.0",
+    "@navikt/next-auth-wonderwall": "^1.1.0",
     "@next/font": "13.1.1",
     "@types/node": "18.11.18",
     "@types/react": "18.0.26",

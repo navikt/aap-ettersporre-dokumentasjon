@@ -1,8 +1,23 @@
 import Head from 'next/head';
 import { Header } from '@navikt/ds-react-internal';
 import { Button, Select, TextField } from '@navikt/ds-react';
+import { useState } from 'react';
 
 export default function Home() {
+  const [fnr, setFnr] = useState<string>('');
+  const [dokumentasjon, setDokumentasjon] = useState<string>('');
+
+  const onButtonClick = async (event) => {
+    event.preventDefault();
+    await fetch('/api/ettersporrDokumentasjon', {
+      method: 'POST',
+      body: JSON.stringify({
+        fnr,
+        type: dokumentasjon,
+      }),
+    });
+  };
+
   return (
     <>
       <Head>
@@ -15,14 +30,18 @@ export default function Home() {
       </Header>
       <main>
         <form>
-          <TextField label="Fødselsnummer" />
-          <TextField label="SøknadsId" />
-          <Select label="Hvilken dokumentasjon etterspørres">
-            <option value="">Velg type dokumentasjon</option>
-            <option value="Lønnsslipp">Lønnsslipp</option>
-            <option value="Vitnemål">Vitnemål</option>
+          <TextField label="Fødselsnummer" onChange={(event) => setFnr(event.target.value)} />
+          <Select
+            label="Hvilken dokumentasjon etterspørres"
+            onChange={(event) => setDokumentasjon(event.target.value)}
+          >
+            <option value="">Velg dokumentasjon</option>
+            <option value="STUDIER">Studier</option>
+            <option value="OMSORG">Omsorg</option>
           </Select>
-          <Button variant="primary">Etterspør dokkumentasjon</Button>
+          <Button variant="primary" onClick={onButtonClick}>
+            Etterspør dokkumentasjon
+          </Button>
         </form>
       </main>
     </>
