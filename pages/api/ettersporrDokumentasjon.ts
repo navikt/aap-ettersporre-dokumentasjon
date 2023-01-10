@@ -18,7 +18,11 @@ export default async function withAuthenticatedApi(
     res.status(200).json({});
   }
 
+  logger.info('token fra AAD: ' + accessToken);
+
   const bearerToken = await grantAzureOboToken(accessToken, 'dev-gcp:aap:soknad-api');
+
+  logger.info('bearer token: ' + bearerToken);
 
   if (isInvalidTokenSet(bearerToken)) {
     if (bearerToken.error instanceof Error) {
