@@ -18,7 +18,10 @@ const handler = withAuthenticatedApi(
 
     logger.info('token fra AAD: ' + accessToken);
 
-    const bearerToken = await grantAzureOboToken(accessToken, 'dev-gcp:aap:soknad-api');
+    const bearerToken = await grantAzureOboToken(
+      accessToken,
+      'api://dev-gcp.aap.soknad-api/.default'
+    );
 
     logger.info('bearer token: ' + bearerToken);
 
