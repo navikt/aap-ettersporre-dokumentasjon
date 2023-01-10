@@ -37,7 +37,7 @@ const handler = withAuthenticatedApi(
 
     try {
       await proxyApiRouteRequest({
-        hostname: 'https://aap-soknad-api.dev.intern.nav.no',
+        hostname: 'soknad-api',
         path: '/sb/vedlegg',
         req,
         res,
