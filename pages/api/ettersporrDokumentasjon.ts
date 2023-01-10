@@ -41,6 +41,7 @@ const handler = withAuthenticatedApi(
         path: '/sb/vedlegg',
         req,
         res,
+        https: false,
         bearerToken,
       });
     } catch (error: unknown) {
