@@ -35,6 +35,8 @@ export function withAuthenticatedApi<Response>(
       return;
     }
 
+    logger.info('Bearer token i withAuth: ' + bearerToken);
+
     return handler(req, res, bearerToken?.replace('Bearer ', ''));
   };
 }
