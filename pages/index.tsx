@@ -1,11 +1,19 @@
 import Head from 'next/head';
 import { Header } from '@navikt/ds-react-internal';
-import { Button, Select, TextField } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, Heading, Search, Select, TextField } from '@navikt/ds-react';
 import { useState } from 'react';
+import styles from '../styles/Home.module.css';
+
+interface UserInfo {
+  fnr: string;
+  navn: string;
+  kanKontaktes: boolean;
+}
 
 export default function Home() {
-  const [fnr, setFnr] = useState<string>('');
   const [dokumentasjon, setDokumentasjon] = useState<string>('');
+
+  const [userInfo, setUserInfo] = useState<any>(null);
 
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -21,7 +29,7 @@ export default function Home() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        fnr,
+        fnr: userInfo.fnr,
         type: dokumentasjon,
       }),
     });
@@ -41,24 +49,53 @@ export default function Home() {
       </Head>
       <Header>
         <Header.Title as="h1">AAP - Etterspør dokumentasjon</Header.Title>
-      </Header>
-      <main>
-        <form>
-          <TextField label="Fødselsnummer" onChange={(event) => setFnr(event.target.value)} />
-          <Select
-            label="Hvilken dokumentasjon etterspørres"
-            onChange={(event) => setDokumentasjon(event.target.value)}
-          >
-            <option value="">Velg dokumentasjon</option>
-            <option value="STUDIER">Studier</option>
-            <option value="OMSORG">Omsorg</option>
-          </Select>
-          {error && <p>{error}</p>}
-          {message && <p>{message}</p>}
-          <Button variant="primary" onClick={onButtonClick}>
-            Etterspør dokkumentasjon
-          </Button>
+        <form
+          className={styles.headerSearch}
+          onSubmit={(e) => {
+            e.preventDefault();
+            setUserInfo({ fnr: e.target[0].value, navn: 'Ola Nordmann', kanKontaktes: true });
+          }}
+        >
+          <Search
+            label="header søk"
+            size="small"
+            variant="simple"
+            placeholder="Fødselsnummer"
+            onClear={() => setUserInfo(null)}
+          />
         </form>
+      </Header>
+      <main className={styles.mainFlex}>
+        {userInfo && (
+          <div className={styles.content}>
+            <Heading level="2" size="medium">
+              {userInfo.navn}
+            </Heading>
+            <BodyShort>Fødselsnummer: {userInfo.fnr}</BodyShort>
+            <BodyShort>Kan kontaktes: {userInfo.kanKontaktes ? 'Ja' : 'Nei'}</BodyShort>
+            <form>
+              <Select
+                label="Hvilken dokumentasjon etterspørres"
+                onChange={(event) => setDokumentasjon(event.target.value)}
+              >
+                <option value="">Velg dokumentasjon</option>
+                <option value="ARBEIDSGIVER">Arbeidsgiver</option>
+                <option value="STUDIER">Studier</option>
+                <option value="LÅNEKASSEN_STIPEND">Lånekassen stipend</option>
+                <option value="LÅNEKASSEN_LÅM">Lånekassen lån</option>
+                <option value="ANDREBARN">Andre barn</option>
+                <option value="OMSORG">Omsorg</option>
+                <option value="UTENLANDSKE">Utland??</option>
+                <option value="ANNET">Annet</option>
+              </Select>
+              {error && <Alert variant="error">{error}</Alert>}
+              {message && <Alert variant="success">{message}</Alert>}
+              <Button variant="primary" onClick={onButtonClick}>
+                Etterspør dokkumentasjon
+              </Button>
+            </form>
+          </div>
+        )}
       </main>
     </>
   );
