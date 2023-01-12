@@ -53,6 +53,7 @@ export default function Home() {
           className={styles.headerSearch}
           onSubmit={(e) => {
             e.preventDefault();
+            // @ts-ignore-line
             setUserInfo({ fnr: e.target[0].value, navn: 'Ola Nordmann', kanKontaktes: true });
           }}
         >
